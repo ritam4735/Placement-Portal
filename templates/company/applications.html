@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-0">
+      <i class="bi bi-people me-2"></i>Applications
+    </h4>
+    <p class="text-muted small mb-0">
+      {{ drive.job_title }} &mdash;
+      {% if drive.status == "Approved" %}<span class="badge bg-success">Approved</span>
+      {% elif drive.status == "Pending" %}<span class="badge bg-warning text-dark">Pending</span>
+      {% else %}<span class="badge bg-secondary">{{ drive.status }}</span>{% endif %}
+      &nbsp;Deadline: {{ drive.deadline }}
+    </p>
+  </div>
+  <a href="/company" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i>Dashboard
+  </a>
+</div>
+
+{% if data %}
+<!-- quick summary -->
+<div class="d-flex gap-3 mb-4 flex-wrap">
+  <span class="badge bg-secondary fs-6">Total: {{ data|length }}</span>
+  <span class="badge bg-info text-dark fs-6">Shortlisted: {{ data|selectattr('app.status','equalto','Shortlisted')|list|length }}</span>
+  <span class="badge bg-success fs-6">Selected: {{ data|selectattr('app.status','equalto','Selected')|list|length }}</span>
+  <span class="badge bg-danger fs-6">Rejected: {{ data|selectattr('app.status','equalto','Rejected')|list|length }}</span>
+</div>
+
+<div class="glass p-3">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Applicant</th>
+        <th>Email</th>
+        <th>CGPA</th>
+        <th>Resume</th>
+        <th>Applied on</th>
+        <th>Status</th>
+        <th class="text-center" style="width:60px">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in data %}
+      <tr>
+        <td class="fw-semibold">{{ row.student.full_name }}</td>
+        <td class="text-muted small">{{ row.student.email }}</td>
+        <td>{{ row.student.cgpa or "—" }}</td>
+        <td>
+          {% if row.student.resume %}
+            <a href="/uploads/{{ row.student.resume }}" target="_blank"
+              class="btn btn-sm btn-outline-secondary py-0">
+              <i class="bi bi-file-earmark-pdf me-1"></i>View
+            </a>
+          {% else %}
+            <span class="text-muted small">—</span>
+          {% endif %}
+        </td>
+        <td class="text-muted small">{{ row.app.applied_on.strftime('%d %b %Y') }}</td>
+        <td>
+          {% if row.app.status == "Applied" %}
+            <span class="badge bg-warning text-dark">Applied</span>
+          {% elif row.app.status == "Shortlisted" %}
+            <span class="badge bg-info text-dark">Shortlisted</span>
+          {% elif row.app.status == "Selected" %}
+            <span class="badge bg-success">Selected</span>
+          {% elif row.app.status == "Rejected" %}
+            <span class="badge bg-danger">Rejected</span>
+          {% endif %}
+        </td>
+        <td class="text-center">
+          {% if row.app.status != "Selected" and row.app.status != "Rejected" %}
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary px-2 py-1"
+              data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="document" title="Update status">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              {% if row.app.status != "Shortlisted" %}
+              <li>
+                <form method="POST" action="/company/shortlist/{{ row.app.id }}">
+                  <button class="dropdown-item text-info" type="submit">
+                    <i class="bi bi-bookmark-check me-2"></i>Shortlist
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+              <li>
+                <form method="POST" action="/company/select/{{ row.app.id }}">
+                  <button class="dropdown-item text-success" type="submit">
+                    <i class="bi bi-person-check me-2"></i>Select (hire)
+                  </button>
+                </form>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="POST" action="/company/reject/{{ row.app.id }}"
+                  onsubmit="return confirm('Reject this applicant?')">
+                  <button class="dropdown-item text-danger" type="submit">
+                    <i class="bi bi-person-x me-2"></i>Reject
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+          {% else %}
+            <span class="text-muted small">—</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<div class="text-center py-5 text-muted glass p-4">
+  <i class="bi bi-inbox" style="font-size:2.5rem;display:block;margin-bottom:1rem"></i>
+  No applications yet for this drive.
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<h2 class="mb-4">
+
+<i class="bi bi-speedometer2"></i>
+Admin Dashboard
+
+</h2>
+
+
+
+<!-- ================= STATS ================= -->
+
+<div class="row g-4 mb-4">
+
+
+<div class="col-md-4">
+<a href="/admin/students" style="text-decoration:none">
+<div class="stat-card glass">
+<h6>Total Students</h6>
+<h2>{{ students }}</h2>
+</div>
+</a>
+</div>
+
+
+<div class="col-md-4">
+<a href="/admin/companies" style="text-decoration:none">
+<div class="stat-card glass">
+<h6>Total Companies</h6>
+<h2>{{ companies }}</h2>
+</div>
+</a>
+</div>
+
+
+<div class="col-md-4">
+<a href="/admin/drives" style="text-decoration:none">
+<div class="stat-card glass">
+<h6>Active Drives</h6>
+<h2>{{ drives }}</h2>
+</div>
+</a>
+</div>
+
+
+<div class="col-md-4">
+<a href="/admin/students?placed=1" style="text-decoration:none">
+<div class="stat-card glass">
+<h6>Placements</h6>
+<h2>{{ placements }}</h2>
+</div>
+</a>
+</div>
+
+
+<div class="col-md-4">
+<a href="/admin/drives?status=Pending" style="text-decoration:none">
+<div class="stat-card glass">
+<h6>Pending Drives</h6>
+<h2>{{ pending }}</h2>
+</div>
+</a>
+</div>
+
+
+<div class="col-md-4">
+<a href="/admin/drives" style="text-decoration:none">
+<div class="stat-card glass">
+<h6>Applications</h6>
+<h2>{{ apps }}</h2>
+</div>
+</a>
+</div>
+
+
+</div>
+
+
+
+<!-- ================= QUICK LINKS ================= -->
+
+<div class="d-flex flex-wrap gap-2 mb-4">
+  <a href="/admin/students" class="btn btn-outline-info btn-sm"><i class="bi bi-people me-1"></i>Students</a>
+  <a href="/admin/companies" class="btn btn-outline-primary btn-sm"><i class="bi bi-building me-1"></i>Companies</a>
+  <a href="/admin/drives?status=Pending" class="btn btn-outline-warning btn-sm"><i class="bi bi-briefcase me-1"></i>Pending Drives</a>
+  <a href="/admin/testimonials" class="btn btn-outline-warning btn-sm"><i class="bi bi-chat-quote me-1"></i>Testimonials &amp; Feedback</a>
+  <a href="/admin/courses" class="btn btn-outline-secondary btn-sm"><i class="bi bi-book me-1"></i>Manage Courses</a>
+</div>
+
+<!-- ================= RECENT ================= -->
+
+<h4 class="mb-3">
+
+<i class="bi bi-clock-history"></i>
+Recent Activity
+
+</h4>
+
+
+<div class="glass p-3">
+
+
+{% for a in recent %}
+
+<div class="d-flex justify-content-between mb-2">
+
+<div>
+
+Application {{ a.id }}
+
+</div>
+
+
+<div>
+
+{% if a.status == "Applied" %}
+
+<span class="badge bg-warning">
+
+Applied
+
+</span>
+
+{% elif a.status == "Shortlisted" %}
+
+<span class="badge bg-info">
+
+Shortlisted
+
+</span>
+
+{% elif a.status == "Selected" %}
+
+<span class="badge bg-success">
+
+Selected
+
+</span>
+
+{% elif a.status == "Rejected" %}
+
+<span class="badge bg-danger">
+
+Rejected
+
+</span>
+
+{% endif %}
+
+</div>
+
+
+</div>
+
+<hr>
+
+{% endfor %}
+
+
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold mb-0">
+    <i class="bi bi-chat-quote me-2 text-warning"></i>Testimonials &amp; Feedback
+  </h4>
+  <a href="/admin" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i>Dashboard
+  </a>
+</div>
+
+{% if testimonials %}
+
+<div class="d-flex gap-3 mb-4 flex-wrap">
+  <span class="badge bg-secondary fs-6">Total: {{ testimonials|length }}</span>
+  <span class="badge bg-success fs-6">Published: {{ testimonials|selectattr('is_approved')|list|length }}</span>
+  <span class="badge bg-warning text-dark fs-6">Pending: {{ testimonials|rejectattr('is_approved')|list|length }}</span>
+</div>
+
+<div class="table-responsive glass p-3">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Role</th>
+        <th>Rating</th>
+        <th>Private feedback</th>
+        <th>Testimonial (public)</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th class="text-center" style="width:60px">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in testimonials %}
+      <tr>
+        <td class="text-muted small">{{ t.id }}</td>
+        <td>
+          {% if t.role == "student" %}
+            <span class="badge bg-info text-dark"><i class="bi bi-mortarboard me-1"></i>Student</span>
+          {% else %}
+            <span class="badge bg-primary"><i class="bi bi-building me-1"></i>Company</span>
+          {% endif %}
+        </td>
+        <td class="text-nowrap">
+          {% for i in range(t.rating or 0) %}
+            <i class="bi bi-star-fill text-warning" style="font-size:.7rem"></i>
+          {% endfor %}
+        </td>
+        <td style="max-width:180px">
+          {% if t.feedback %}
+            <span class="text-muted small">{{ t.feedback[:100] }}{% if t.feedback|length > 100 %}…{% endif %}</span>
+          {% else %}
+            <span class="text-muted fst-italic small">—</span>
+          {% endif %}
+        </td>
+        <td style="max-width:180px">
+          {% if t.testimonial %}
+            <span class="small">{{ t.testimonial[:100] }}{% if t.testimonial|length > 100 %}…{% endif %}</span>
+          {% else %}
+            <span class="text-muted fst-italic small">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if t.is_approved %}
+            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Published</span>
+          {% else %}
+            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+          {% endif %}
+        </td>
+        <td class="text-muted small text-nowrap">{{ t.created_at.strftime('%d %b %Y') }}</td>
+        <td class="text-center">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary px-2 py-1"
+              data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="document" title="Actions">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              {% if t.testimonial %}
+                {% if not t.is_approved %}
+                <li>
+                  <form method="POST" action="/admin/approve_testimonial/{{ t.id }}">
+                    <button class="dropdown-item text-success" type="submit">
+                      <i class="bi bi-check-circle me-2"></i>Approve &amp; publish
+                    </button>
+                  </form>
+                </li>
+                {% else %}
+                <li>
+                  <form method="POST" action="/admin/reject_testimonial/{{ t.id }}">
+                    <button class="dropdown-item text-warning" type="submit">
+                      <i class="bi bi-eye-slash me-2"></i>Unpublish
+                    </button>
+                  </form>
+                </li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+              {% endif %}
+              <li>
+                <form method="POST" action="/admin/delete_testimonial/{{ t.id }}"
+                  onsubmit="return confirm('Delete this entry permanently?')">
+                  <button class="dropdown-item text-danger" type="submit">
+                    <i class="bi bi-trash me-2"></i>Delete
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<div class="text-center py-5 text-muted glass p-4">
+  <i class="bi bi-chat-quote" style="font-size:3rem;display:block;margin-bottom:1rem"></i>
+  No testimonials or feedback submitted yet.
+</div>
+{% endif %}
+
+{% endblock %}

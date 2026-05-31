@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="mb-4"><i class="bi bi-briefcase"></i> Placement Drives</h2>
+
+<!-- STATUS FILTER PILLS -->
+<div class="d-flex gap-2 mb-4 flex-wrap">
+  <a href="/admin/drives" class="btn btn-sm {{ 'btn-primary' if not request.args.get('status') else 'btn-outline-secondary' }}">All</a>
+  <a href="/admin/drives?status=Pending"  class="btn btn-sm {{ 'btn-warning'  if request.args.get('status')=='Pending'  else 'btn-outline-secondary' }}">Pending</a>
+  <a href="/admin/drives?status=Approved" class="btn btn-sm {{ 'btn-success'  if request.args.get('status')=='Approved' else 'btn-outline-secondary' }}">Approved</a>
+  <a href="/admin/drives?status=Rejected" class="btn btn-sm {{ 'btn-danger'   if request.args.get('status')=='Rejected' else 'btn-outline-secondary' }}">Rejected</a>
+</div>
+
+<div class="glass p-3">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Company</th>
+        <th>Deadline</th>
+        <th>Status</th>
+        <th class="text-center" style="width:60px">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in drives %}
+      <tr>
+        <td class="fw-semibold">{{ d.job_title }}</td>
+        <td>
+          {% set comp = d.company_id %}
+          <span class="text-muted small">ID {{ d.company_id }}</span>
+        </td>
+        <td class="text-muted small">{{ d.deadline }}</td>
+        <td>
+          {% if d.status == "Approved" %}
+            <span class="badge bg-success">Approved</span>
+          {% elif d.status == "Pending" %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% elif d.status == "Rejected" %}
+            <span class="badge bg-danger">Rejected</span>
+          {% else %}
+            <span class="badge bg-secondary">Closed</span>
+          {% endif %}
+          {% if d.closed %}<span class="badge bg-secondary ms-1">Closed</span>{% endif %}
+        </td>
+        <td class="text-center">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary px-2 py-1"
+              data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="document" title="Actions">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="/admin/drive/{{ d.id }}">
+                  <i class="bi bi-eye me-2 text-info"></i>View applications
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              {% if d.status != "Approved" %}
+              <li>
+                <form method="POST" action="/admin/approve_drive/{{ d.id }}">
+                  <button class="dropdown-item text-success" type="submit">
+                    <i class="bi bi-check-circle me-2"></i>Approve
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+              {% if d.status != "Rejected" %}
+              <li>
+                <form method="POST" action="/admin/reject_drive/{{ d.id }}">
+                  <button class="dropdown-item text-warning" type="submit">
+                    <i class="bi bi-x-circle me-2"></i>Reject
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center text-muted py-4">No drives found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

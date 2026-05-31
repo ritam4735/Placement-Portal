@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<h2 class="mb-4">
+
+<i class="bi bi-book"></i>
+Courses
+
+</h2>
+
+
+
+<!-- ================= ADD COURSE ================= -->
+
+<div class="glass p-4 mb-4">
+
+<form method="post">
+
+<div class="row align-items-end">
+
+
+<div class="col-md-6">
+
+<label class="mb-1">
+
+Course Name
+
+</label>
+
+<input
+name="name"
+class="form-control"
+placeholder="Enter course name"
+required>
+
+</div>
+
+
+<div class="col-md-3">
+
+<button class="btn btn-success w-100">
+
+Add Course
+
+</button>
+
+</div>
+
+
+</div>
+
+</form>
+
+</div>
+
+
+
+<!-- ================= TABLE ================= -->
+
+<div class="glass p-3">
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+{% for c in courses %}
+
+<tr>
+
+<td>{{ c.id }}</td>
+
+<td>{{ c.name }}</td>
+
+<td>
+
+<form method="POST" action="/admin/delete_course/{{ c.id }}" style="display:inline">
+  <button class="btn btn-danger btn-sm">Delete</button>
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+
+{% endblock %}

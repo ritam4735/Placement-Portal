@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="mb-4"><i class="bi bi-building"></i> Companies</h2>
+
+<!-- SEARCH -->
+<div class="glass p-3 mb-4">
+  <form method="GET" action="/admin/companies">
+    <div class="row align-items-end g-2">
+      <div class="col-md-6">
+        <label class="form-label">Search Company</label>
+        <input name="q" class="form-control" placeholder="Name / HR / Email / Location"
+          value="{{ request.args.get('q','') }}">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100">Search</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- TABLE -->
+<div class="glass p-3">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Company</th>
+        <th>HR Email</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th class="text-center" style="width:60px">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in companies %}
+      <tr>
+        <td><span class="badge bg-secondary">#{{ c.id }}</span></td>
+        <td class="fw-semibold">{{ c.company_name }}</td>
+        <td>{{ c.hr_email }}</td>
+        <td>{{ c.location or "—" }}</td>
+        <td>
+          {% if c.blocked %}
+            <span class="badge bg-danger">Blocked</span>
+          {% elif c.rejected %}
+            <span class="badge bg-warning text-dark">Rejected</span>
+          {% elif c.approved %}
+            <span class="badge bg-success">Approved</span>
+          {% else %}
+            <span class="badge bg-secondary">Pending</span>
+          {% endif %}
+        </td>
+        <td class="text-center">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle-split px-2 py-1"
+              data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="document" title="Actions">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="/admin/company/{{ c.id }}">
+                  <i class="bi bi-eye me-2 text-info"></i>View profile
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              {% if not c.approved %}
+              <li>
+                <form method="POST" action="/admin/approve_company/{{ c.id }}">
+                  <button class="dropdown-item text-success" type="submit">
+                    <i class="bi bi-check-circle me-2"></i>Approve
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+              {% if not c.rejected %}
+              <li>
+                <form method="POST" action="/admin/reject_company/{{ c.id }}">
+                  <button class="dropdown-item text-warning" type="submit">
+                    <i class="bi bi-x-circle me-2"></i>Reject
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+              <li><hr class="dropdown-divider"></li>
+              {% if c.blocked %}
+              <li>
+                <form method="POST" action="/admin/unblock_company/{{ c.id }}">
+                  <button class="dropdown-item text-success" type="submit">
+                    <i class="bi bi-unlock me-2"></i>Unblock
+                  </button>
+                </form>
+              </li>
+              {% else %}
+              <li>
+                <form method="POST" action="/admin/block_company/{{ c.id }}">
+                  <button class="dropdown-item text-warning" type="submit">
+                    <i class="bi bi-slash-circle me-2"></i>Block
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="POST" action="/admin/delete_company/{{ c.id }}"
+                  onsubmit="return confirm('Delete {{ c.company_name }} and all its drives/applications?')">
+                  <button class="dropdown-item text-danger" type="submit">
+                    <i class="bi bi-trash me-2"></i>Delete permanently
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-center text-muted py-4">No companies found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

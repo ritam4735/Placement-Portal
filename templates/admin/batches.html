@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+<i class="bi bi-calendar"></i>
+Batches
+
+</h2>
+
+
+
+<div class="glass p-4 mb-4">
+
+
+<form method="post">
+
+<div class="row align-items-end">
+
+
+<div class="col-md-6">
+
+<label class="mb-1">
+Batch Year
+</label>
+
+<input
+name="year"
+class="form-control"
+placeholder="Enter batch year (2024)"
+required>
+
+</div>
+
+
+<div class="col-md-3">
+
+<button class="btn btn-success w-100">
+
+Add Batch
+
+</button>
+
+</div>
+
+
+</div>
+
+
+</form>
+
+</div>
+
+
+
+<div class="glass p-3">
+
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Year</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+{% for b in batches %}
+
+<tr>
+
+<td>{{ b.id }}</td>
+
+<td>{{ b.year }}</td>
+
+<td>
+
+<form method="POST" action="/admin/delete_batch/{{ b.id }}" style="display:inline">
+  <button class="btn btn-danger btn-sm">Delete</button>
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+{% endblock %}

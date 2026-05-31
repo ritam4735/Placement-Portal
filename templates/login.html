@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .reg-page {
+    min-height: 100vh;
+    padding: 80px 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 10%, rgba(230,57,70,.18), transparent),
+      radial-gradient(ellipse 40% 40% at 10% 90%, rgba(230,57,70,.1), transparent);
+  }
+  .login-card {
+    background: rgba(10,10,12,0.92);
+    border: 1px solid rgba(230,57,70,0.28);
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+  }
+  .login-header {
+    background: linear-gradient(135deg, rgba(230,57,70,0.22) 0%, rgba(140,20,30,0.12) 100%);
+    border-bottom: 1px solid rgba(230,57,70,0.2);
+    padding: 36px 40px 30px;
+    text-align: center;
+  }
+  .login-header .reg-icon {
+    width: 56px; height: 56px;
+    background: rgba(230,57,70,0.18);
+    border: 1px solid rgba(230,57,70,0.4);
+    border-radius: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: #e63946;
+    margin-bottom: 16px;
+  }
+  .login-header h2 { font-size: 1.55rem; font-weight: 700; color: #fff; margin: 0 0 4px; }
+  .login-header p { color: #777; font-size: .88rem; margin: 0; }
+  .login-body { padding: 36px 40px; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .field label {
+    font-size: .78rem; font-weight: 600; letter-spacing: .4px;
+    color: #bbb; text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .field label i { color: #e63946; font-size: .85rem; }
+  .reg-input {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 10px !important;
+    color: #f0f0f0 !important;
+    padding: 12px 14px !important;
+    font-size: .95rem !important;
+    transition: border-color .2s, box-shadow .2s, background .2s !important;
+    width: 100%;
+  }
+  .reg-input::placeholder { color: #555 !important; }
+  .reg-input:focus {
+    outline: none !important;
+    background: rgba(230,57,70,0.06) !important;
+    border-color: rgba(230,57,70,0.6) !important;
+    box-shadow: 0 0 0 3px rgba(230,57,70,0.12) !important;
+    color: #fff !important;
+  }
+  .btn-register {
+    width: 100%;
+    background: #e63946; color: #fff; border: none;
+    border-radius: 12px; padding: 14px;
+    font-size: 1rem; font-weight: 600;
+    transition: .2s;
+    box-shadow: 0 4px 24px rgba(230,57,70,0.35);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-register:hover {
+    background: #c1121f;
+    box-shadow: 0 4px 32px rgba(230,57,70,0.55);
+    transform: translateY(-1px);
+  }
+  .divider { 
+    display: flex; align-items: center; gap: 12px;
+    margin: 24px 0 20px; color: #333; font-size: .8rem;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.07);
+  }
+  .role-chips { display: flex; gap: 10px; }
+  .role-chip {
+    flex: 1; text-align: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px; padding: 11px 8px;
+    text-decoration: none; color: #aaa;
+    font-size: .82rem; font-weight: 500;
+    transition: .2s;
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+  }
+  .role-chip i { font-size: 1.1rem; color: #555; transition: .2s; }
+  .role-chip:hover {
+    border-color: rgba(230,57,70,0.4);
+    background: rgba(230,57,70,0.08);
+    color: #fff;
+  }
+  .role-chip:hover i { color: #e63946; }
+  .login-footer { padding: 0 40px 32px; }
+</style>
+
+<div class="reg-page">
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-md-5 col-sm-8">
+
+  <div class="login-card">
+
+    <div class="login-header">
+      <div class="reg-icon"><i class="bi bi-mortarboard-fill"></i></div>
+      <h2>Welcome back</h2>
+      <p>Sign in to your Placement Portal account</p>
+    </div>
+
+    <div class="login-body">
+      <form method="POST">
+
+        <div class="field">
+          <label><i class="bi bi-at"></i> Username</label>
+          <input name="username" class="reg-input" placeholder="Enter your username" required autofocus>
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-lock-fill"></i> Password</label>
+          <input name="password" type="password" class="reg-input" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="btn-register">
+          <i class="bi bi-box-arrow-in-right"></i> Sign In
+        </button>
+
+      </form>
+
+      <div class="divider">New to PlaceX? Register below</div>
+
+      <div class="role-chips">
+        <a href="/register_student" class="role-chip">
+          <i class="bi bi-mortarboard-fill"></i>
+          Student Register
+        </a>
+        <a href="/register_company" class="role-chip">
+          <i class="bi bi-building-fill"></i>
+          Company Register
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /login-card -->
+
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="mb-4"><i class="bi bi-people"></i> Students</h2>
+
+<!-- SEARCH / FILTER -->
+<div class="glass p-3 mb-4">
+  <form method="GET" action="/admin/students">
+    <div class="row g-2">
+      <div class="col-md-3">
+        <input name="q" value="{{ request.args.get('q','') }}" placeholder="Search name / email / roll" class="form-control">
+      </div>
+      <div class="col-md-2">
+        <select name="course" class="form-control">
+          <option value="">Course</option>
+          {% for c in courses %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="department" class="form-control">
+          <option value="">Dept</option>
+          {% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="batch" class="form-control">
+          <option value="">Batch</option>
+          {% for b in batches %}<option value="{{ b.id }}">{{ b.year }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="semester" class="form-control">
+          <option value="">Sem</option>
+          {% for s in semesters %}<option value="{{ s.id }}">{{ s.number }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-1">
+        <button class="btn btn-primary w-100">Go</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- TABLE -->
+<div class="glass p-3">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Course</th>
+        <th>CGPA</th>
+        <th>Status</th>
+        <th class="text-center" style="width:60px">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td><span class="badge bg-secondary">#{{ s.id }}</span></td>
+        <td>{{ s.full_name }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.course.name if s.course else "—" }}</td>
+        <td>{{ s.cgpa }}</td>
+        <td>
+          {% if s.blocked %}
+            <span class="badge bg-danger">Blocked</span>
+          {% elif s.placed %}
+            <span class="badge bg-success">Placed</span>
+          {% else %}
+            <span class="badge bg-secondary">Active</span>
+          {% endif %}
+        </td>
+        <td class="text-center">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split px-2 py-1"
+              data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="document" title="Actions">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="/admin/student/{{ s.id }}">
+                  <i class="bi bi-eye me-2 text-info"></i>View profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/admin/edit_student/{{ s.id }}">
+                  <i class="bi bi-pencil me-2 text-warning"></i>Edit
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              {% if s.blocked %}
+              <li>
+                <form method="POST" action="/admin/unblock_student/{{ s.id }}">
+                  <button class="dropdown-item text-success" type="submit">
+                    <i class="bi bi-unlock me-2"></i>Unblock
+                  </button>
+                </form>
+              </li>
+              {% else %}
+              <li>
+                <form method="POST" action="/admin/block_student/{{ s.id }}">
+                  <button class="dropdown-item text-warning" type="submit">
+                    <i class="bi bi-slash-circle me-2"></i>Block
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="POST" action="/admin/delete_student/{{ s.id }}"
+                  onsubmit="return confirm('Permanently delete {{ s.full_name }} and all their data?')">
+                  <button class="dropdown-item text-danger" type="submit">
+                    <i class="bi bi-trash me-2"></i>Delete permanently
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">No students found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

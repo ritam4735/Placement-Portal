@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>Create Drive</h2>
+
+<form method="POST">
+
+Title
+<input name="title"
+class="form-control"
+required>
+
+Description
+<input name="desc"
+class="form-control"
+required>
+
+Eligibility
+<input name="eligibility"
+class="form-control"
+required>
+
+Deadline
+<input type="date"
+name="deadline"
+class="form-control"
+required>
+
+<button class="btn btn-success mt-2">
+Create
+</button>
+
+</form>
+
+{% endblock %}

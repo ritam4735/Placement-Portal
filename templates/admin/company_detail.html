@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<h2 class="mb-4">
+
+<i class="bi bi-building"></i>
+Company Details
+
+</h2>
+
+
+
+<div class="glass p-4 mb-4">
+
+
+<div class="row">
+
+
+<!-- LEFT INFO -->
+
+<div class="col-md-6">
+
+
+<h5 class="mb-3">
+Company Info
+</h5>
+
+
+<p>
+<b>Name:</b>
+{{ company.company_name }}
+</p>
+
+
+<p>
+<b>Website:</b>
+{{ company.website }}
+</p>
+
+
+<p>
+<b>Location:</b>
+{{ company.location }}
+</p>
+
+
+<p>
+<b>Description:</b>
+{{ company.description }}
+</p>
+
+
+</div>
+
+
+
+<!-- RIGHT INFO -->
+
+<div class="col-md-6">
+
+
+<h5 class="mb-3">
+HR Details
+</h5>
+
+
+<p>
+<b>HR Name:</b>
+{{ company.hr_name }}
+</p>
+
+
+<p>
+<b>Email:</b>
+{{ company.hr_email }}
+</p>
+
+
+<p>
+<b>Phone:</b>
+{{ company.hr_phone }}
+</p>
+
+
+
+<p>
+
+<b>Status:</b>
+
+{% if company.blocked %}
+
+<span class="badge bg-danger">
+Blocked
+</span>
+
+{% elif company.rejected %}
+
+<span class="badge bg-danger">
+Rejected
+</span>
+
+{% elif company.approved %}
+
+<span class="badge bg-success">
+Approved
+</span>
+
+{% else %}
+
+<span class="badge bg-warning">
+Pending
+</span>
+
+{% endif %}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- ACTION BUTTONS -->
+
+<div class="glass p-3">
+
+
+{% if not company.approved %}
+<form method="POST" action="/admin/approve_company/{{ company.id }}" style="display:inline">
+  <button class="btn btn-success">Approve</button>
+</form>
+{% endif %}
+
+<form method="POST" action="/admin/reject_company/{{ company.id }}" style="display:inline">
+  <button class="btn btn-warning">Reject</button>
+</form>
+
+{% if company.blocked %}
+<form method="POST" action="/admin/unblock_company/{{ company.id }}" style="display:inline">
+  <button class="btn btn-secondary">Unblock</button>
+</form>
+{% else %}
+<form method="POST" action="/admin/block_company/{{ company.id }}" style="display:inline">
+  <button class="btn btn-danger">Block</button>
+</form>
+{% endif %}
+
+<a
+class="btn btn-dark"
+href="/admin/companies">
+
+Back
+
+</a>
+
+
+</div>
+
+
+
+{% endblock %}

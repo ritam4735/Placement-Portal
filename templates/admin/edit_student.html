@@ -1,0 +1,189 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<h2 class="mb-4">
+
+<i class="bi bi-person-gear"></i>
+Edit Student
+
+</h2>
+
+
+
+<div class="glass p-4">
+
+<form method="POST">
+
+
+<div class="row">
+
+
+<!-- LEFT -->
+
+<div class="col-md-6">
+
+<label>Enrollment No</label>
+
+<input
+name="enrollment"
+value="{{ profile.enrollment_no }}"
+class="form-control mb-3">
+
+
+<label>Roll No</label>
+
+<input
+name="roll"
+value="{{ profile.roll_no }}"
+class="form-control mb-3">
+
+
+<label>CGPA</label>
+
+<input
+name="cgpa"
+value="{{ profile.cgpa }}"
+class="form-control mb-3">
+
+
+</div>
+
+
+
+<!-- RIGHT -->
+
+<div class="col-md-6">
+
+
+<label>Course</label>
+
+<select
+name="course_id"
+class="form-control mb-3">
+
+{% for c in courses %}
+
+<option
+value="{{ c.id }}"
+{% if profile.course_id == c.id %}
+selected
+{% endif %}
+>
+
+{{ c.name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+
+<label>Department</label>
+
+<select
+name="department_id"
+class="form-control mb-3">
+
+{% for d in departments %}
+
+<option
+value="{{ d.id }}"
+{% if profile.department_id == d.id %}
+selected
+{% endif %}
+>
+
+{{ d.name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+
+<label>Batch</label>
+
+<select
+name="batch_id"
+class="form-control mb-3">
+
+{% for b in batches %}
+
+<option
+value="{{ b.id }}"
+{% if profile.batch_id == b.id %}
+selected
+{% endif %}
+>
+
+{{ b.year }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+
+<label>Semester</label>
+
+<select
+name="semester_id"
+class="form-control mb-3">
+
+{% for s in semesters %}
+
+<option
+value="{{ s.id }}"
+{% if profile.semester_id == s.id %}
+selected
+{% endif %}
+>
+
+{{ s.number }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+</div>
+
+
+</div>
+
+
+<br>
+
+
+<button class="btn btn-success">
+
+Save
+
+</button>
+
+
+<a
+href="/admin/students"
+class="btn btn-dark">
+
+Back
+
+</a>
+
+
+</form>
+
+</div>
+
+
+{% endblock %}

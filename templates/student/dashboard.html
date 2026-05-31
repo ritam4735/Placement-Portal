@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold mb-0">
+    <i class="bi bi-speedometer2 me-2"></i>Student Dashboard
+  </h4>
+  <div class="d-flex gap-2">
+    <a href="/student/profile" class="btn btn-sm btn-outline-info">
+      <i class="bi bi-person me-1"></i>My Profile
+    </a>
+    <a href="/student/feedback" class="btn btn-sm btn-outline-warning">
+      <i class="bi bi-chat-heart me-1"></i>Feedback
+    </a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card glass">
+      <h6>Applications</h6>
+      <h2>{{ total_apps }}</h2>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <h6>Shortlisted</h6>
+      <h2>{{ shortlisted }}</h2>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <h6>Open Drives</h6>
+      <h2>{{ open_drives }}</h2>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== RESUME UPLOAD CARD ===== -->
+<div class="glass p-4 mb-4">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+
+    <div>
+      <h6 class="fw-bold mb-1">
+        <i class="bi bi-file-earmark-person me-2 text-warning"></i>Resume
+      </h6>
+      {% if profile.resume %}
+        <p class="text-muted small mb-0">
+          Current file:
+          <a href="/uploads/{{ profile.resume }}" target="_blank" class="text-warning text-decoration-none">
+            <i class="bi bi-file-earmark-pdf me-1"></i>{{ profile.resume }}
+          </a>
+        </p>
+      {% else %}
+        <p class="text-muted small mb-0">No resume uploaded yet. Upload a PDF to apply for drives.</p>
+      {% endif %}
+    </div>
+
+    <form method="POST" action="/upload_resume" enctype="multipart/form-data"
+          class="d-flex align-items-center gap-2 flex-wrap">
+      <label class="mb-0">
+        <input type="file" name="resume" accept=".pdf" class="form-control form-control-sm"
+               style="max-width:260px">
+      </label>
+      <button type="submit" class="btn btn-sm btn-warning fw-semibold">
+        <i class="bi bi-upload me-1"></i>{{ 'Replace Resume' if profile.resume else 'Upload Resume' }}
+      </button>
+    </form>
+
+  </div>
+  <p class="text-muted mb-0 mt-2" style="font-size:.78rem">
+    PDF only &bull; Max 2 MB
+  </p>
+</div>
+
+
+<!-- RECENT ACTIVITY -->
+{% if recent %}
+<h5 class="mb-2">Recent Activity</h5>
+<div class="glass p-3 mb-4">
+  {% for a in recent %}
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <span class="text-muted small">Drive #{{ a.drive_id }}</span>
+    {% if a.status == "Applied" %}<span class="badge bg-warning text-dark">Applied</span>
+    {% elif a.status == "Shortlisted" %}<span class="badge bg-info text-dark">Shortlisted</span>
+    {% elif a.status == "Selected" %}<span class="badge bg-success">Selected</span>
+    {% elif a.status == "Rejected" %}<span class="badge bg-danger">Rejected</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- AVAILABLE DRIVES -->
+<h5 class="mb-3">Available Drives</h5>
+
+{% if drives %}
+<div class="glass p-3">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Eligibility</th>
+        <th>Deadline</th>
+        <th>Already applied?</th>
+        <th class="text-center">Apply</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in drives %}
+      {% set already = apps | selectattr('drive_id', 'equalto', d.id) | list %}
+      <tr>
+        <td class="fw-semibold">{{ d.job_title }}</td>
+        <td class="text-muted small">{{ d.eligibility or "—" }}</td>
+        <td class="text-muted small">{{ d.deadline }}</td>
+        <td>
+          {% if already %}
+            {% set app = already[0] %}
+            {% if app.status == "Applied" %}<span class="badge bg-warning text-dark">Applied</span>
+            {% elif app.status == "Shortlisted" %}<span class="badge bg-info text-dark">Shortlisted</span>
+            {% elif app.status == "Selected" %}<span class="badge bg-success">Selected</span>
+            {% elif app.status == "Rejected" %}<span class="badge bg-danger">Rejected</span>
+            {% endif %}
+          {% else %}
+            <span class="text-muted small">—</span>
+          {% endif %}
+        </td>
+        <td class="text-center">
+          {% if not already %}
+            <form method="POST" action="/apply/{{ d.id }}">
+              <button class="btn btn-sm btn-primary">
+                <i class="bi bi-send me-1"></i>Apply
+              </button>
+            </form>
+          {% else %}
+            <span class="text-muted small">Applied</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="glass p-4 text-center text-muted">
+  <i class="bi bi-briefcase" style="font-size:2rem;display:block;margin-bottom:.5rem"></i>
+  No approved drives available right now.
+</div>
+{% endif %}
+
+{% endblock %}

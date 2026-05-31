@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold mb-0"><i class="bi bi-building me-2"></i>Company Dashboard</h4>
+  <a href="/company/create_drive" class="btn btn-primary">
+    <i class="bi bi-plus-circle me-1"></i>New Drive
+  </a>
+</div>
+
+<!-- STATS -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card glass">
+      <h6>Your Drives</h6>
+      <h2>{{ drive_count }}</h2>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <h6>Total Applicants</h6>
+      <h2>{{ total_apps }}</h2>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <h6>Selected</h6>
+      <h2>{{ selected }}</h2>
+    </div>
+  </div>
+</div>
+
+<div class="mb-3">
+  <a href="/company/feedback" class="btn btn-outline-warning btn-sm">
+    <i class="bi bi-chat-heart me-1"></i>Give Feedback / Testimonial
+  </a>
+</div>
+
+<!-- RECENT ACTIVITY -->
+{% if recent %}
+<h5 class="mb-2">Recent Activity</h5>
+<div class="glass p-3 mb-4">
+  {% for a in recent %}
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <span class="text-muted small">Application #{{ a.id }}</span>
+    {% if a.status == "Applied" %}<span class="badge bg-warning text-dark">Applied</span>
+    {% elif a.status == "Shortlisted" %}<span class="badge bg-info text-dark">Shortlisted</span>
+    {% elif a.status == "Selected" %}<span class="badge bg-success">Selected</span>
+    {% elif a.status == "Rejected" %}<span class="badge bg-danger">Rejected</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- DRIVES TABLE -->
+<h5 class="mb-3">Your Drives</h5>
+<div class="glass p-3">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Status</th>
+        <th>Deadline</th>
+        <th>Applicants</th>
+        <th class="text-center" style="width:60px">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in drives %}
+      <tr>
+        <td class="fw-semibold">{{ d.job_title }}</td>
+        <td>
+          {% if d.closed %}
+            <span class="badge bg-secondary">Closed</span>
+          {% elif d.status == "Approved" %}
+            <span class="badge bg-success">Approved</span>
+          {% elif d.status == "Pending" %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% elif d.status == "Rejected" %}
+            <span class="badge bg-danger">Rejected</span>
+          {% endif %}
+        </td>
+        <td class="text-muted small">{{ d.deadline }}</td>
+        <td>
+          <a href="/company/applications/{{ d.id }}" class="text-decoration-none">
+            <i class="bi bi-people me-1"></i>View
+          </a>
+        </td>
+        <td class="text-center">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary px-2 py-1"
+              data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="document" title="Actions">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="/company/applications/{{ d.id }}">
+                  <i class="bi bi-people me-2 text-info"></i>View applications
+                </a>
+              </li>
+              {% if d.status == "Pending" and not d.closed %}
+              <li>
+                <a class="dropdown-item" href="/company/edit_drive/{{ d.id }}">
+                  <i class="bi bi-pencil me-2 text-warning"></i>Edit drive
+                </a>
+              </li>
+              {% endif %}
+              {% if not d.closed %}
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="POST" action="/company/close_drive/{{ d.id }}"
+                  onsubmit="return confirm('Close this drive? No more applications will be accepted.')">
+                  <button class="dropdown-item text-secondary" type="submit">
+                    <i class="bi bi-x-circle me-2"></i>Close drive
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+              {% if d.status == "Pending" and not d.closed %}
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="POST" action="/company/delete_drive/{{ d.id }}"
+                  onsubmit="return confirm('Delete this drive permanently?')">
+                  <button class="dropdown-item text-danger" type="submit">
+                    <i class="bi bi-trash me-2"></i>Delete drive
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center text-muted py-4">No drives yet. Create your first one!</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

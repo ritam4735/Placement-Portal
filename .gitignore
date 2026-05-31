@@ -1,0 +1,18 @@
+# SQLite Database
+portal.db
+
+# Uploads contents (ignores all files inside uploads, but you can track a .gitkeep if needed)
+uploads/*
+!uploads/.gitkeep
+
+# Python / Environment
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db

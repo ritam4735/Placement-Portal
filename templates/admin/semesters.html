@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<h2 class="mb-4">
+
+<i class="bi bi-calendar3"></i>
+Semesters
+
+</h2>
+
+
+
+<!-- ================= ADD ================= -->
+
+<div class="glass p-4 mb-4">
+
+<form method="post">
+
+<div class="row align-items-end">
+
+
+<div class="col-md-6">
+
+<label class="mb-1">
+
+Semester Number
+
+</label>
+
+<input
+name="number"
+class="form-control"
+placeholder="Enter semester (1 - 8)"
+required>
+
+</div>
+
+
+<div class="col-md-3">
+
+<button class="btn btn-success w-100">
+
+Add Semester
+
+</button>
+
+</div>
+
+
+</div>
+
+</form>
+
+</div>
+
+
+
+<!-- ================= TABLE ================= -->
+
+<div class="glass p-3">
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Number</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+{% for s in semesters %}
+
+<tr>
+
+<td>{{ s.id }}</td>
+
+<td>{{ s.number }}</td>
+
+<td>
+
+<form method="POST" action="/admin/delete_semester/{{ s.id }}" style="display:inline">
+  <button class="btn btn-danger btn-sm">Delete</button>
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,515 @@
+/* =====================================
+   GLOBAL
+===================================== */
+
+body {
+
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(255,0,0,0.25),
+            transparent 40%
+        ),
+
+        radial-gradient(
+            circle at 20% 80%,
+            rgba(255,0,0,0.15),
+            transparent 40%
+        ),
+
+        #050505;
+
+    color: white;
+
+    font-family: "Segoe UI", Arial, sans-serif;
+
+}
+
+
+
+/* =====================================
+   GLASS PANEL
+===================================== */
+
+.glass {
+
+    background: rgba(15,15,15,0.85);
+
+    backdrop-filter: blur(10px);
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(255,0,0,0.3);
+
+}
+
+
+
+/* =====================================
+   NAVBAR
+===================================== */
+
+/* NAV */
+.pub-nav {
+  
+  top: 0;
+  z-index: 1000;
+
+  background: rgba(8, 8, 9, 0.85);
+  backdrop-filter: blur(18px);
+
+  border-bottom: 1px solid var(--border);
+
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+/* container alignment */
+.pub-nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* BRAND */
+.pub-nav .brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: -0.4px;
+  display: flex;
+  align-items: center;
+}
+
+.pub-nav .brand span {
+  color: var(--red);
+}
+
+/* NAV LINKS */
+.pub-nav .navbar-nav {
+  align-items: center;
+}
+
+.pub-nav .nav-link {
+  color: #aaa;
+  font-size: 0.9rem;
+  padding: 6px 14px;
+  transition: 0.2s;
+}
+
+.pub-nav .nav-link:hover {
+  color: #fff;
+}
+
+/* BUTTONS */
+.btn-ghost {
+  border: 1px solid var(--border);
+  color: #ccc;
+  background: transparent;
+
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 34px;
+
+  transition: 0.2s;
+}
+
+.btn-ghost:hover {
+  border-color: var(--red);
+  color: #fff;
+  background: var(--red-dim);
+}
+
+.btn-red {
+  background: var(--red);
+  color: #fff;
+  border: none;
+
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 0 10px var(--red-glow);
+  transition: 0.2s;
+}
+
+.btn-red:hover {
+  background: #c1121f;
+  box-shadow: 0 0 18px var(--red-glow);
+}
+
+/* TOGGLER FIX */
+.navbar-toggler {
+  border: 1px solid var(--border) !important;
+  color: #aaa !important;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+
+/* =====================================
+   SIDEBAR
+===================================== */
+
+.sidebar {
+
+    width: 240px;
+
+    min-height: 100vh;
+
+    background: rgba(0,0,0,0.7);
+
+    backdrop-filter: blur(10px);
+
+    border-right: 1px solid rgba(255,0,0,0.3);
+
+    padding: 20px;
+
+}
+
+
+
+.sidebar .logo {
+
+    font-weight: bold;
+
+    font-size: 20px;
+
+    margin-bottom: 20px;
+
+}
+
+
+
+.menu a {
+
+    display: block;
+
+    padding: 10px;
+
+    color: #bbb;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    margin-bottom: 5px;
+
+    transition: 0.2s;
+
+}
+
+
+
+.menu a i {
+
+    margin-right: 8px;
+
+}
+
+
+
+.menu a:hover {
+
+    background: rgba(255,0,0,0.2);
+
+    color: white;
+
+}
+
+
+
+.menu a.active {
+
+    background: rgba(255,0,0,0.4);
+
+    border: 1px solid red;
+
+    box-shadow: 0 0 10px red;
+
+    color: white;
+
+}
+
+
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+
+.main {
+
+    width: 100%;
+
+    padding: 20px;
+
+}
+
+
+
+/* =====================================
+   BUTTONS
+===================================== */
+
+.neon-btn {
+
+    background: black;
+
+    color: white;
+
+    border: 1px solid red;
+
+    border-radius: 25px;
+
+    padding: 8px 18px;
+
+    box-shadow: 0 0 5px red;
+
+    transition: 0.3s;
+
+}
+
+
+
+.neon-btn:hover {
+
+    box-shadow:
+        0 0 10px red,
+        0 0 20px red;
+
+}
+
+
+
+/* =====================================
+   FORM
+===================================== */
+
+.form-control {
+
+    background: rgba(0,0,0,0.6) !important;
+
+    color: white !important;
+
+    border: 1px solid rgba(255,0,0,0.4);
+
+}
+
+
+
+.form-control::placeholder {
+
+    color: #aaa;
+
+}
+
+
+
+.form-control:focus {
+
+    background: rgba(0,0,0,0.8);
+
+    color: white;
+
+    border: 1px solid red;
+
+    box-shadow: 0 0 10px red;
+
+}
+
+
+
+/* =====================================
+   DASHBOARD CARDS
+===================================== */
+
+.stat-card {
+
+    background: rgba(0,0,0,0.65);
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(255,0,0,0.3);
+
+    padding: 20px;
+
+    transition: 0.3s;
+
+    position: relative;
+
+}
+
+
+
+.stat-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 6px;
+
+    height: 100%;
+
+    left: 0;
+
+    top: 0;
+
+    background: red;
+
+    border-radius: 10px 0 0 10px;
+
+}
+
+
+
+.stat-card:hover {
+
+    box-shadow:
+        0 0 10px red,
+        0 0 20px red;
+
+    transform: translateY(-4px);
+
+}
+
+
+
+/* =====================================
+   TABLE
+===================================== */
+
+.table {
+
+    background: rgba(0,0,0,0.6);
+
+    color: white;
+
+    border-radius: 10px;
+
+    /* overflow: hidden removed — was clipping action dropdowns */
+
+}
+
+/* wrapper that still rounds the corners without clipping */
+.table-wrap {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+
+
+.table thead {
+
+    background: rgba(255,0,0,0.25);
+
+}
+
+
+
+.table tbody tr:hover {
+
+    background: rgba(255,0,0,0.15);
+
+}
+
+
+
+/* =====================================
+   DROPDOWN
+===================================== */
+
+.dropdown-menu {
+
+    background: #111;
+
+    border: 1px solid red;
+
+}
+
+
+
+.dropdown-item {
+
+    color: white;
+
+}
+
+
+
+.dropdown-item:hover {
+
+    background: red;
+
+    color: white;
+
+}
+
+
+
+/* =====================================
+   HEADINGS
+===================================== */
+
+h2 {
+
+    text-shadow: 0 0 10px red;
+
+}
+
+
+
+h4 {
+
+    color: #ffaaaa;
+
+}
+
+
+
+/* =====================================
+   SCROLLBAR (optional modern)
+===================================== */
+
+::-webkit-scrollbar {
+
+    width: 8px;
+
+}
+
+
+
+::-webkit-scrollbar-track {
+
+    background: #111;
+
+}
+
+
+
+::-webkit-scrollbar-thumb {
+
+    background: red;
+
+    border-radius: 10px;
+
+}

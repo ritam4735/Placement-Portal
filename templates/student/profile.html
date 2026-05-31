@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>My Profile</h2>
+
+<div class="row">
+
+<!-- LEFT CARD -->
+
+<div class="col-md-6">
+
+<div class="card p-3">
+
+<h4>Personal Details</h4>
+
+<form method="POST">
+
+Name
+<input name="name"
+value="{{ profile.full_name }}"
+class="form-control">
+
+Email
+<input name="email"
+value="{{ profile.email }}"
+class="form-control">
+
+Phone
+<input name="phone"
+value="{{ profile.phone }}"
+class="form-control">
+
+Age
+<input name="age"
+value="{{ profile.age }}"
+class="form-control">
+
+<br>
+
+<button class="btn btn-primary">
+Update Profile
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT CARD -->
+
+<div class="col-md-6">
+
+<div class="card p-3">
+
+<h4>Academic Details</h4>
+
+Enrollment No
+<input
+value="{{ profile.enrollment_no }}"
+class="form-control"
+disabled>
+
+Roll No
+<input
+value="{{ profile.roll_no }}"
+class="form-control"
+disabled>
+
+Course
+<input
+value="{{ profile.course }}"
+class="form-control"
+disabled>
+
+CGPA
+<input
+value="{{ profile.cgpa }}"
+class="form-control"
+disabled>
+
+</div>
+
+
+<br>
+
+
+<div class="card p-3">
+
+<h4>Resume</h4>
+
+{% if profile.resume %}
+
+<a class="btn btn-secondary"
+href="/uploads/{{ profile.resume }}"
+target="_blank">
+
+View Resume
+
+</a>
+
+{% else %}
+
+No resume uploaded
+
+{% endif %}
+
+</div>
+
+
+</div>
+
+</div>
+
+{% endblock %}

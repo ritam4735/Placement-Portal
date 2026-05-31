@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">
+<i class="bi bi-person-badge"></i>
+Student Profile
+</h2>
+
+
+<!-- ================= PROFILE INFO ================= -->
+
+<div class="glass p-4 mb-4">
+
+<div class="row">
+
+<div class="col-md-6">
+
+<h5 class="mb-3">Personal Details</h5>
+
+<table class="table table-sm">
+<tr><td class="text-muted" style="width:40%">Full Name</td><td><b>{{ student.full_name or "—" }}</b></td></tr>
+<tr><td class="text-muted">Email</td><td>{{ student.email or "—" }}</td></tr>
+<tr><td class="text-muted">Phone</td><td>{{ student.phone or "—" }}</td></tr>
+<tr><td class="text-muted">Age</td><td>{{ student.age or "—" }}</td></tr>
+<tr>
+  <td class="text-muted">Status</td>
+  <td>
+    {% if student.blocked %}
+    <span class="badge bg-danger">Blocked</span>
+    {% elif student.placed %}
+    <span class="badge bg-success">Placed</span>
+    {% else %}
+    <span class="badge bg-info">Active</span>
+    {% endif %}
+  </td>
+</tr>
+</table>
+
+</div>
+
+
+<div class="col-md-6">
+
+<h5 class="mb-3">Academic Details</h5>
+
+<table class="table table-sm">
+<tr><td class="text-muted" style="width:40%">Enrollment No</td><td><b>{{ student.enrollment_no or "—" }}</b></td></tr>
+<tr><td class="text-muted">Roll No</td><td>{{ student.roll_no or "—" }}</td></tr>
+<tr><td class="text-muted">CGPA</td><td>{{ student.cgpa or "—" }}</td></tr>
+<tr><td class="text-muted">Course</td><td>{{ student.course.name if student.course else "—" }}</td></tr>
+<tr><td class="text-muted">Department</td><td>{{ student.department.name if student.department else "—" }}</td></tr>
+<tr><td class="text-muted">Batch</td><td>{{ student.batch.year if student.batch else "—" }}</td></tr>
+<tr><td class="text-muted">Semester</td><td>{{ student.semester.number if student.semester else "—" }}</td></tr>
+</table>
+
+</div>
+
+</div>
+
+
+{% if student.resume %}
+<div class="mt-2">
+<a href="/uploads/{{ student.resume }}" target="_blank" class="btn btn-sm btn-secondary">
+<i class="bi bi-file-earmark-pdf"></i> View Resume
+</a>
+</div>
+{% endif %}
+
+</div>
+
+
+<!-- ================= APPLICATION HISTORY ================= -->
+
+<div class="glass p-4 mb-4">
+
+<h5 class="mb-3">
+<i class="bi bi-clock-history"></i>
+Application History
+<span class="badge bg-secondary ms-1">{{ apps|length }}</span>
+</h5>
+
+{% if apps %}
+
+<table class="table table-hover mb-0">
+<thead>
+<tr>
+<th>Drive</th>
+<th>Company</th>
+<th>Applied On</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+{% for a in apps %}
+
+{% set entry = drive_map[a.id] %}
+{% set drive = entry.drive %}
+{% set company = entry.company %}
+
+<tr>
+<td>{{ drive.job_title if drive else "—" }}</td>
+<td>{{ company.company_name if company else "—" }}</td>
+<td>{{ a.applied_on.strftime("%d %b %Y") if a.applied_on else "—" }}</td>
+<td>
+  {% if a.status == "Applied" %}
+  <span class="badge bg-warning">Applied</span>
+  {% elif a.status == "Shortlisted" %}
+  <span class="badge bg-info">Shortlisted</span>
+  {% elif a.status == "Selected" %}
+  <span class="badge bg-success">Selected</span>
+  {% elif a.status == "Rejected" %}
+  <span class="badge bg-danger">Rejected</span>
+  {% else %}
+  <span class="badge bg-secondary">{{ a.status }}</span>
+  {% endif %}
+</td>
+</tr>
+
+{% endfor %}
+</tbody>
+</table>
+
+{% else %}
+<p class="text-muted mb-0">No applications yet.</p>
+{% endif %}
+
+</div>
+
+
+<!-- ================= ACTIONS ================= -->
+
+<div class="d-flex gap-2">
+
+<a href="/admin/edit_student/{{ student.id }}" class="btn btn-warning">
+<i class="bi bi-pencil"></i> Edit Academic Info
+</a>
+
+{% if student.blocked %}
+<form method="POST" action="/admin/unblock_student/{{ student.id }}">
+  <button class="btn btn-success">
+  <i class="bi bi-unlock"></i> Unblock
+  </button>
+</form>
+{% else %}
+<form method="POST" action="/admin/block_student/{{ student.id }}">
+  <button class="btn btn-danger">
+  <i class="bi bi-slash-circle"></i> Block Student
+  </button>
+</form>
+{% endif %}
+
+<a href="/admin/students" class="btn btn-dark">
+<i class="bi bi-arrow-left"></i> Back
+</a>
+
+</div>
+
+{% endblock %}

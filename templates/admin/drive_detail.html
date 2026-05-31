@@ -1,0 +1,201 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<h2 class="mb-4">
+
+<i class="bi bi-briefcase"></i>
+Drive Details
+
+</h2>
+
+
+
+<!-- ================= DRIVE INFO ================= -->
+
+<div class="glass p-4 mb-4">
+
+<div class="row">
+
+
+<div class="col-md-6">
+
+<h5>Job Info</h5>
+
+<p>
+<b>Title:</b>
+{{ drive.job_title }}
+</p>
+
+<p>
+<b>Description:</b>
+{{ drive.job_description }}
+</p>
+
+<p>
+<b>Eligibility:</b>
+{{ drive.eligibility }}
+</p>
+
+<p>
+<b>Deadline:</b>
+{{ drive.deadline }}
+</p>
+
+</div>
+
+
+
+<div class="col-md-6">
+
+<h5>Status</h5>
+
+<p>
+
+{% if drive.status == "Approved" %}
+
+<span class="badge bg-success">
+Approved
+</span>
+
+{% elif drive.status == "Rejected" %}
+
+<span class="badge bg-danger">
+Rejected
+</span>
+
+{% else %}
+
+<span class="badge bg-warning">
+Pending
+</span>
+
+{% endif %}
+
+</p>
+
+
+<p>
+
+<b>Created:</b>
+{{ drive.created_at }}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- ================= APPLICATIONS ================= -->
+
+<div class="glass p-3 mb-4">
+
+<h5 class="mb-3">
+<i class="bi bi-people"></i>
+Applications
+<span class="badge bg-secondary ms-1">{{ data|length }}</span>
+</h5>
+
+{% if data %}
+
+<table class="table table-hover mb-0">
+
+<thead>
+<tr>
+<th>Student</th>
+<th>Email</th>
+<th>CGPA</th>
+<th>Applied On</th>
+<th>Status</th>
+<th>Resume</th>
+</tr>
+</thead>
+
+<tbody>
+{% for row in data %}
+<tr>
+
+<td>{{ row.student.full_name if row.student else "—" }}</td>
+
+<td>{{ row.student.email if row.student else "—" }}</td>
+
+<td>{{ row.student.cgpa if row.student else "—" }}</td>
+
+<td>{{ row.app.applied_on.strftime("%d %b %Y") if row.app.applied_on else "—" }}</td>
+
+<td>
+{% if row.app.status == "Applied" %}
+<span class="badge bg-warning">Applied</span>
+{% elif row.app.status == "Shortlisted" %}
+<span class="badge bg-info">Shortlisted</span>
+{% elif row.app.status == "Selected" %}
+<span class="badge bg-success">Selected</span>
+{% elif row.app.status == "Rejected" %}
+<span class="badge bg-danger">Rejected</span>
+{% else %}
+<span class="badge bg-secondary">{{ row.app.status }}</span>
+{% endif %}
+</td>
+
+<td>
+{% if row.student and row.student.resume %}
+<a class="btn btn-sm btn-secondary"
+   href="/uploads/{{ row.student.resume }}"
+   target="_blank">
+  <i class="bi bi-file-earmark-pdf"></i> View
+</a>
+{% else %}
+—
+{% endif %}
+</td>
+
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+{% else %}
+<p class="text-muted mb-0">No applications yet.</p>
+{% endif %}
+
+</div>
+
+
+<!-- ================= ACTIONS ================= -->
+
+<div class="glass p-3">
+
+
+{% if drive.status != "Approved" %}
+<form method="POST" action="/admin/approve_drive/{{ drive.id }}" style="display:inline">
+  <button class="btn btn-success">Approve</button>
+</form>
+{% endif %}
+
+<form method="POST" action="/admin/reject_drive/{{ drive.id }}" style="display:inline">
+  <button class="btn btn-warning">Reject</button>
+</form>
+
+
+<a
+class="btn btn-dark"
+href="/admin/drives">
+
+Back
+
+</a>
+
+
+</div>
+
+
+
+{% endblock %}

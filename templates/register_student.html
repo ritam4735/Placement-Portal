@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  /* ── page bg ── */
+  .reg-page {
+    min-height: 100vh;
+    padding: 48px 0 64px;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 10%, rgba(230,57,70,.18), transparent),
+      radial-gradient(ellipse 40% 40% at 10% 90%, rgba(230,57,70,.1), transparent);
+  }
+
+  /* ── card ── */
+  .reg-card {
+    background: rgba(10,10,12,0.92);
+    border: 1px solid rgba(230,57,70,0.28);
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+  }
+
+  /* ── header strip ── */
+  .reg-header {
+    background: linear-gradient(135deg, rgba(230,57,70,0.22) 0%, rgba(140,20,30,0.12) 100%);
+    border-bottom: 1px solid rgba(230,57,70,0.2);
+    padding: 32px 40px 28px;
+  }
+  .reg-header .reg-icon {
+    width: 52px; height: 52px;
+    background: rgba(230,57,70,0.18);
+    border: 1px solid rgba(230,57,70,0.4);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; color: #e63946;
+    margin-bottom: 14px;
+  }
+  .reg-header h2 {
+    font-size: 1.6rem; font-weight: 700; color: #fff;
+    letter-spacing: -.4px; margin: 0 0 4px;
+  }
+  .reg-header p { color: #888; font-size: .9rem; margin: 0; }
+
+  /* ── form body ── */
+  .reg-body { padding: 36px 40px; }
+
+  /* ── section label ── */
+  .form-section {
+    display: flex; align-items: center; gap: 10px;
+    margin: 28px 0 18px;
+  }
+  .form-section:first-child { margin-top: 0; }
+  .form-section .section-line {
+    flex: 1; height: 1px; background: rgba(230,57,70,0.2);
+  }
+  .form-section .section-label {
+    font-size: .72rem; font-weight: 600; letter-spacing: 1.2px;
+    text-transform: uppercase; color: #e63946;
+    white-space: nowrap;
+  }
+  .form-section .section-icon { color: #e63946; font-size: .9rem; }
+
+  /* ── field group ── */
+  .field-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .field-group.single { grid-template-columns: 1fr; }
+
+  /* ── field ── */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field label {
+    font-size: .78rem; font-weight: 600; letter-spacing: .4px;
+    color: #bbb; text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .field label i { color: #e63946; font-size: .85rem; }
+  .field .req { color: #e63946; margin-left: 2px; }
+
+  /* ── inputs ── */
+  .reg-input {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 10px !important;
+    color: #f0f0f0 !important;
+    padding: 11px 14px !important;
+    font-size: .95rem !important;
+    transition: border-color .2s, box-shadow .2s, background .2s !important;
+    width: 100%;
+  }
+  .reg-input::placeholder { color: #555 !important; }
+  .reg-input:focus {
+    outline: none !important;
+    background: rgba(230,57,70,0.06) !important;
+    border-color: rgba(230,57,70,0.6) !important;
+    box-shadow: 0 0 0 3px rgba(230,57,70,0.12) !important;
+    color: #fff !important;
+  }
+  select.reg-input option { background: #111; color: #f0f0f0; }
+
+  /* ── hint text ── */
+  .field-hint { font-size: .75rem; color: #555; margin-top: 2px; }
+
+  /* ── submit area ── */
+  .reg-footer {
+    padding: 24px 40px 32px;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .btn-register {
+    width: 100%;
+    background: #e63946;
+    color: #fff; border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 1rem; font-weight: 600;
+    letter-spacing: .3px;
+    transition: .2s;
+    box-shadow: 0 4px 24px rgba(230,57,70,0.35);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-register:hover {
+    background: #c1121f;
+    box-shadow: 0 4px 32px rgba(230,57,70,0.55);
+    transform: translateY(-1px);
+  }
+  .login-nudge {
+    text-align: center; margin-top: 18px;
+    font-size: .875rem; color: #555;
+  }
+  .login-nudge a {
+    color: #e63946; text-decoration: none; font-weight: 600;
+  }
+  .login-nudge a:hover { color: #ff6b75; text-decoration: underline; }
+</style>
+
+
+<div class="reg-page">
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-xl-7 col-lg-8 col-md-10">
+
+  <div class="reg-card">
+
+    <!-- HEADER -->
+    <div class="reg-header">
+      <div class="reg-icon"><i class="bi bi-mortarboard-fill"></i></div>
+      <h2>Student Registration</h2>
+      <p>Create your account to browse and apply for placement drives</p>
+    </div>
+
+    <form method="POST">
+    <div class="reg-body">
+
+      <!-- SECTION: Personal Info -->
+      <div class="form-section">
+        <span class="section-icon"><i class="bi bi-person"></i></span>
+        <span class="section-label">Personal Information</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label><i class="bi bi-person-fill"></i> Full Name <span class="req">*</span></label>
+          <input name="name" class="reg-input" placeholder="e.g. Arjun Sharma" required>
+        </div>
+        <div class="field">
+          <label><i class="bi bi-calendar3"></i> Age <span class="req">*</span></label>
+          <input name="age" type="number" min="16" max="60" class="reg-input" placeholder="e.g. 21" required>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-top:16px">
+        <div class="field">
+          <label><i class="bi bi-envelope-fill"></i> Email <span class="req">*</span></label>
+          <input name="email" type="email" class="reg-input" placeholder="you@college.edu" required>
+        </div>
+        <div class="field">
+          <label><i class="bi bi-phone-fill"></i> Phone <span class="req">*</span></label>
+          <input name="phone" class="reg-input" placeholder="10-digit mobile number" maxlength="10" required>
+          <span class="field-hint">10 digits, no spaces</span>
+        </div>
+      </div>
+
+      <!-- SECTION: Academic Details -->
+      <div class="form-section">
+        <span class="section-icon"><i class="bi bi-book"></i></span>
+        <span class="section-label">Academic Details</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label><i class="bi bi-card-text"></i> Roll No <span class="req">*</span></label>
+          <input name="roll_no" class="reg-input" placeholder="e.g. 21CS001" required>
+        </div>
+        <div class="field">
+          <label><i class="bi bi-bar-chart-fill"></i> CGPA <span class="req">*</span></label>
+          <input name="cgpa" type="number" step="0.01" min="0" max="10" class="reg-input" placeholder="e.g. 8.5" required>
+          <span class="field-hint">On a scale of 10</span>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-top:16px">
+        <div class="field">
+          <label><i class="bi bi-journal-bookmark-fill"></i> Course <span class="req">*</span></label>
+          <select name="course" class="reg-input" required>
+            <option value="">— Select course —</option>
+            {% for c in courses %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label><i class="bi bi-diagram-3-fill"></i> Department <span class="req">*</span></label>
+          <select name="department" class="reg-input" required>
+            <option value="">— Select department —</option>
+            {% for d in departments %}
+            <option value="{{ d.id }}">{{ d.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-top:16px">
+        <div class="field">
+          <label><i class="bi bi-calendar-range-fill"></i> Batch <span class="req">*</span></label>
+          <select name="batch" class="reg-input" required>
+            <option value="">— Select batch year —</option>
+            {% for b in batches %}
+            <option value="{{ b.id }}">{{ b.year }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label><i class="bi bi-list-ol"></i> Semester <span class="req">*</span></label>
+          <select name="semester" class="reg-input" required>
+            <option value="">— Select semester —</option>
+            {% for s in semesters %}
+            <option value="{{ s.id }}">Semester {{ s.number }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <!-- SECTION: Account Credentials -->
+      <div class="form-section">
+        <span class="section-icon"><i class="bi bi-shield-lock"></i></span>
+        <span class="section-label">Account Credentials</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label><i class="bi bi-at"></i> Username <span class="req">*</span></label>
+          <input name="username" class="reg-input" placeholder="Choose a unique username" required>
+          <span class="field-hint">Used to log in — can't be changed later</span>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-top:16px">
+        <div class="field">
+          <label><i class="bi bi-lock-fill"></i> Password <span class="req">*</span></label>
+          <input name="password" type="password" class="reg-input" placeholder="Create a strong password" required>
+        </div>
+        <div class="field">
+          <label><i class="bi bi-lock-fill"></i> Confirm Password <span class="req">*</span></label>
+          <input name="confirm_password" type="password" class="reg-input" placeholder="Repeat your password" required>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="reg-footer">
+      <button type="submit" class="btn-register">
+        <i class="bi bi-person-plus-fill"></i> Create Student Account
+      </button>
+      <p class="login-nudge">
+        Already have an account?
+        <a href="/login"><i class="bi bi-box-arrow-in-right me-1"></i>Login here</a>
+      </p>
+    </div>
+    </form>
+
+  </div><!-- /reg-card -->
+
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}

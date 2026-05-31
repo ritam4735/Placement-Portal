@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .reg-page {
+    min-height: 100vh;
+    padding: 48px 0 64px;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 10%, rgba(230,57,70,.18), transparent),
+      radial-gradient(ellipse 40% 40% at 10% 90%, rgba(230,57,70,.1), transparent);
+  }
+  .reg-card {
+    background: rgba(10,10,12,0.92);
+    border: 1px solid rgba(230,57,70,0.28);
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+  }
+  .reg-header {
+    background: linear-gradient(135deg, rgba(230,57,70,0.22) 0%, rgba(140,20,30,0.12) 100%);
+    border-bottom: 1px solid rgba(230,57,70,0.2);
+    padding: 32px 40px 28px;
+  }
+  .reg-header .reg-icon {
+    width: 52px; height: 52px;
+    background: rgba(230,57,70,0.18);
+    border: 1px solid rgba(230,57,70,0.4);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; color: #e63946;
+    margin-bottom: 14px;
+  }
+  .reg-header h2 { font-size: 1.6rem; font-weight: 700; color: #fff; letter-spacing: -.4px; margin: 0 0 4px; }
+  .reg-header p { color: #888; font-size: .9rem; margin: 0; }
+  .reg-body { padding: 36px 40px; }
+  .form-section {
+    display: flex; align-items: center; gap: 10px;
+    margin: 28px 0 18px;
+  }
+  .form-section:first-child { margin-top: 0; }
+  .form-section .section-line { flex: 1; height: 1px; background: rgba(230,57,70,0.2); }
+  .form-section .section-label {
+    font-size: .72rem; font-weight: 600; letter-spacing: 1.2px;
+    text-transform: uppercase; color: #e63946; white-space: nowrap;
+  }
+  .form-section .section-icon { color: #e63946; font-size: .9rem; }
+  .field-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .field-group.single { grid-template-columns: 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: .78rem; font-weight: 600; letter-spacing: .4px;
+    color: #bbb; text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .field label i { color: #e63946; font-size: .85rem; }
+  .field .req { color: #e63946; margin-left: 2px; }
+  .reg-input {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 10px !important;
+    color: #f0f0f0 !important;
+    padding: 11px 14px !important;
+    font-size: .95rem !important;
+    transition: border-color .2s, box-shadow .2s, background .2s !important;
+    width: 100%;
+  }
+  .reg-input::placeholder { color: #555 !important; }
+  .reg-input:focus {
+    outline: none !important;
+    background: rgba(230,57,70,0.06) !important;
+    border-color: rgba(230,57,70,0.6) !important;
+    box-shadow: 0 0 0 3px rgba(230,57,70,0.12) !important;
+    color: #fff !important;
+  }
+  textarea.reg-input { resize: vertical; min-height: 90px; }
+  select.reg-input option { background: #111; color: #f0f0f0; }
+  .field-hint { font-size: .75rem; color: #555; margin-top: 2px; }
+  .reg-footer { padding: 24px 40px 32px; border-top: 1px solid rgba(255,255,255,.06); }
+  .btn-register {
+    width: 100%;
+    background: #e63946; color: #fff; border: none;
+    border-radius: 12px; padding: 14px;
+    font-size: 1rem; font-weight: 600; letter-spacing: .3px;
+    transition: .2s;
+    box-shadow: 0 4px 24px rgba(230,57,70,0.35);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-register:hover {
+    background: #c1121f;
+    box-shadow: 0 4px 32px rgba(230,57,70,0.55);
+    transform: translateY(-1px);
+  }
+  .approval-notice {
+    margin-top: 14px;
+    background: rgba(230,57,70,0.08);
+    border: 1px solid rgba(230,57,70,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: .82rem; color: #aaa;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .approval-notice i { color: #e63946; font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .login-nudge { text-align: center; margin-top: 16px; font-size: .875rem; color: #555; }
+  .login-nudge a { color: #e63946; text-decoration: none; font-weight: 600; }
+  .login-nudge a:hover { color: #ff6b75; text-decoration: underline; }
+</style>
+
+<div class="reg-page">
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-xl-7 col-lg-8 col-md-10">
+
+  <div class="reg-card">
+
+    <!-- HEADER -->
+    <div class="reg-header">
+      <div class="reg-icon"><i class="bi bi-building-fill"></i></div>
+      <h2>Company Registration</h2>
+      <p>Register your company to post placement drives and recruit students</p>
+    </div>
+
+    <form method="POST">
+    <div class="reg-body">
+
+      <!-- SECTION: Company Profile -->
+      <div class="form-section">
+        <span class="section-icon"><i class="bi bi-building"></i></span>
+        <span class="section-label">Company Profile</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="field-group single">
+        <div class="field">
+          <label><i class="bi bi-building-fill"></i> Company Name <span class="req">*</span></label>
+          <input name="company_name" class="reg-input" placeholder="e.g. Infosys Limited" required>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-top:16px">
+        <div class="field">
+          <label><i class="bi bi-globe2"></i> Website</label>
+          <input name="website" class="reg-input" placeholder="https://yourcompany.com">
+        </div>
+        <div class="field">
+          <label><i class="bi bi-geo-alt-fill"></i> Location</label>
+          <input name="location" class="reg-input" placeholder="e.g. Bengaluru, Karnataka">
+        </div>
+      </div>
+
+      <div class="field-group single" style="margin-top:16px">
+        <div class="field">
+          <label><i class="bi bi-card-text"></i> About the Company</label>
+          <textarea name="description" class="reg-input"
+            placeholder="Brief description of your company, industry, and culture…"></textarea>
+        </div>
+      </div>
+
+      <!-- SECTION: HR Contact -->
+      <div class="form-section">
+        <span class="section-icon"><i class="bi bi-person-badge"></i></span>
+        <span class="section-label">HR Contact Details</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label><i class="bi bi-person-fill"></i> HR Name <span class="req">*</span></label>
+          <input name="hr_name" class="reg-input" placeholder="Full name of HR contact" required>
+        </div>
+        <div class="field">
+          <label><i class="bi bi-phone-fill"></i> HR Phone <span class="req">*</span></label>
+          <input name="hr_phone" class="reg-input" placeholder="10-digit number" maxlength="10" required>
+        </div>
+      </div>
+
+      <div class="field-group single" style="margin-top:16px">
+        <div class="field">
+          <label><i class="bi bi-envelope-fill"></i> HR Email <span class="req">*</span></label>
+          <input name="hr_email" type="email" class="reg-input" placeholder="hr@yourcompany.com" required>
+        </div>
+      </div>
+
+      <!-- SECTION: Account Credentials -->
+      <div class="form-section">
+        <span class="section-icon"><i class="bi bi-shield-lock"></i></span>
+        <span class="section-label">Account Credentials</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="field-group single">
+        <div class="field">
+          <label><i class="bi bi-at"></i> Username <span class="req">*</span></label>
+          <input name="username" class="reg-input" placeholder="Choose a unique portal username" required>
+          <span class="field-hint">Used to log in — choose carefully, cannot be changed</span>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-top:16px">
+        <div class="field">
+          <label><i class="bi bi-lock-fill"></i> Password <span class="req">*</span></label>
+          <input name="password" type="password" class="reg-input" placeholder="Create a strong password" required>
+        </div>
+        <div class="field">
+          <label><i class="bi bi-lock-fill"></i> Confirm Password <span class="req">*</span></label>
+          <input name="confirm_password" type="password" class="reg-input" placeholder="Repeat your password" required>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="reg-footer">
+      <button type="submit" class="btn-register">
+        <i class="bi bi-building-add"></i> Submit Registration
+      </button>
+
+      <div class="approval-notice">
+        <i class="bi bi-info-circle-fill"></i>
+        <span>Your registration will be reviewed by the placement cell admin. You will be able to log in and post drives <strong>only after approval</strong>.</span>
+      </div>
+
+      <p class="login-nudge">
+        Already registered?
+        <a href="/login"><i class="bi bi-box-arrow-in-right me-1"></i>Login here</a>
+      </p>
+    </div>
+    </form>
+
+  </div><!-- /reg-card -->
+
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}
